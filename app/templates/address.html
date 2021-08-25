@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="row mt-4">
+    <!-- block to show message comes from backend   -->
+    {% if messages %}
+        <div class="col-md-12">
+            {% for message in messages %}
+                <p class="ml-5 text-center text-danger">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- ends here -->
+
+    <!-- page heading  -->
+    <div class="col-12 mt-3 text-center">
+        <h1 class="display-5 mr-3">
+            Select an address
+        </h1>
+        <button onclick="location.href = '/address_form/{{product_id}}'">Add Address</button>
+
+    </div>
+    <!--  ends here   -->
+
+    <!-- page main content    -->
+    <div class="col-lg-8 mx-auto">
+        <ul class="list-group">
+            <!--   Dynamically render address list     -->
+            {% for address in addresses %}
+            <li class="list-group-item">
+                <div class="align-items-lg-center flex-column flex-lg-row p-3">
+                    <div class=" order-lg-1">
+                        <h5 class="mt-0 font-weight-bold mb-2">
+                          {{address.address | linebreaks}}
+                          {{address.city | linebreaks}}
+                          {{address.state | linebreaks}}
+                          {{address.zip | linebreaks}}
+                        </h5>
+                    </div>
+                </div> <!-- End -->
+                <div class="text-right">
+                    <!--  create a form to send data for ordering product for selected order      -->
+                    <form action="/add_order" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="productId" id="productInput" value="{{product_id}}">
+                        <input type="hidden" name="addressId" id="addressInput" value="{{address.id}}">
+                        <button type="submit">Deliver Here</button>
+                    </form>
+                </div>
+            </li> <!-- End -->
+            {% endfor %}
+        </ul> <!-- End -->
+    </div>
+</div>
+
+{% endblock content %}
